@@ -7,10 +7,10 @@ const productsRoutes = require('./routes/products.js');
 const app = express();
 
 // Log time upon request
-/*app.use( (req, res, next) => {
+app.use( (req, res, next) => {
   console.log(`Connection received. Time: ${new Date().toUTCString()}`);
   next();
-});*/
+});
 
 // parse application/x-www-form-urlencoded
 // attach to req.body

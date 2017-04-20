@@ -25,8 +25,16 @@ module.exports = (function(){
     *   false (any other case)
     * Behavior:
     *   Verifies if an article is eligible to be posted or not.
+    *   Also imposes length limits (configurable inside function)
+    *   ├─title:  255 bytes (255)
+    *   ├─author: 255 bytes (255)
+    *   └─body:   50 KB     (51200)
     */
   function _validateNewArticle(article) {
+    const TITLEMAXLENGTH    =   255;
+    const AUTHORMAXLENGTH   =   255;
+    const BODYMAXLENGTH     =   51200;
+
     //TODO
   }
 
@@ -101,4 +109,4 @@ module.exports = (function(){
     getByTitle: _getByTitle,
     editByTitle: _editByTitle
   };
-})();
+})/*()*/;
