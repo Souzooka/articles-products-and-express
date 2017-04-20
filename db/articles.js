@@ -36,6 +36,11 @@ module.exports = (function(){
     const TITLEMAXLENGTH    =   255;
     const AUTHORMAXLENGTH   =   255;
     const BODYMAXLENGTH     =   51200;
+    const articleTemplate = {
+        'title'   :   article.title,
+        'author'  :   article.author || 'Unknown Author',
+        'body'    :   article.body
+      };
 
     if ((article.title  && article.title.length   <= TITLEMAXLENGTH)  &&
         (                  article.author.length  <= AUTHORMAXLENGTH) &&
@@ -43,11 +48,10 @@ module.exports = (function(){
          _indexOfArticle(article.title) === -1)                       {
 
       // strip article of any additional properties it may have.
-      article = {
-        'title'   :   article.title,
-        'author'  :   article.author || 'Unknown Author',
-        'body'    :   article.body
-      };
+      for (let i in article) {
+        delete article[i];
+      }
+      Object.assign(article, articleTemplate);
 
       return true;
     } else {

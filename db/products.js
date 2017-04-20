@@ -37,6 +37,11 @@ module.exports = (function(){
     */
   function _validateNewProduct(product) {
     const NAMEMAXLENGTH = 255;
+    const productTemplate = {
+        'name'       :   product.name,
+        'price'      :   Number(product.price),
+        'inventory'  :   Number(product.inventory)
+      };
 
     if ((product.name && product.name.length <= NAMEMAXLENGTH)  &&
         (!isNaN(Number(product.price)))                         &&
@@ -45,11 +50,10 @@ module.exports = (function(){
 
       // strip product of any additional properties it may have.
       // cast strings to numbers if needed.
-      product = {
-        'name'       :   product.name,
-        'price'      :   Number(product.price),
-        'inventory'  :   Number(product.inventory)
-      };
+      for (let i in product) {
+        delete product[i];
+      }
+      Object.assign(product, productTemplate);
 
       return true;
     } else {
