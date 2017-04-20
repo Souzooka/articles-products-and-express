@@ -25,6 +25,7 @@ module.exports = (function(){
     *   false (any other case)
     * Behavior:
     *   Verifies if an article is eligible to be posted or not.
+    *   Also strips object of any additional properties.
     *   Also imposes length limits (configurable inside function)
     *   ├─title:  255 bytes (255)
     *   ├─author: 255 bytes (255)
@@ -35,7 +36,21 @@ module.exports = (function(){
     const AUTHORMAXLENGTH   =   255;
     const BODYMAXLENGTH     =   51200;
 
-    //TODO
+    if ((article.title  && article.title.length   <= TITLEMAXLENGTH)  &&
+        (article.author && article.author.length  <= AUTHORMAXLENGTH) &&
+        (article.body   && article.body.length    <= BODYMAXLENGTH))  {
+
+      // strip article of any additional properties it may have.
+      article = {
+        'title'   :   article.title,
+        'author'  :   article.author,
+        'body'    :   article.body
+      };
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /** function _indexOfArticle(title)
@@ -46,10 +61,14 @@ module.exports = (function(){
     *     OR
     *   -1 if the article is not found.
     * Behavior:
-    *   TODO
+    *   Creates an array of each article's title properties, then calls indexOf(title) on this array.
+    *   Returns this result.
     */
   function _indexOfArticle(title) {
-    //TODO
+    return array.map((article) => {
+                  return article.title;
+                })
+                .indexOf(title);
   }
 
   /** function _add(article)
@@ -70,10 +89,13 @@ module.exports = (function(){
     *   └─Example: ("This is a title") => ("This%20is%20a%20title").
     */
   function _add(article) {
-    article.urlTitle = article.title;
-    _articles.unshift(article);
-    return true;
-    //TODO
+    if (_validateNewArticle(article)) {
+      article.urlTitle = encodeURIComponent(article.title);
+      _articles.unshift(article);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /** function _getByTitle(title)
