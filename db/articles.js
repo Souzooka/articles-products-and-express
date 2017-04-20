@@ -102,7 +102,7 @@ module.exports = (function(){
 
   /** function _getByTitle(title)
     * Parameters:
-    *   The title of an article.
+    *   The urlTitle of an article.
     * Return values:
     *   The article object
     *     OR
@@ -110,7 +110,8 @@ module.exports = (function(){
     * Behavior:
     *   Uses _indexOfArticle() to find an article object in the _articles array and return it.
     */
-  function _getByTitle(title) {
+  function _getByTitle(urlTitle) {
+    title = decodeURIComponent(urlTitle);
     const index = _indexOfArticle(title);
 
     if (index !== -1) {
@@ -138,13 +139,13 @@ module.exports = (function(){
       // Article not found
       return false;
     } else {
-      let article = _articles.splice(index, 1);
+      let article = _articles.splice(index, 1)[0];
 
       // Maintain a copy of the found object in case new properties are invalid
       let articleCopy = {};
       Object.assign(articleCopy, article);
 
-      // Copy new values over to article
+      // Copy new values over to articleS
       Object.assign(article, newArticleProps);
 
       // if the new article is valid, splice it back in.
@@ -160,9 +161,9 @@ module.exports = (function(){
     }
   }
 
-  /** function _deleteByTitle(title)
+  /** function _deleteByTitle(urlTitle)
     * Parameters:
-    *   The title of an article.
+    *   The urlTitle of an article.
     * Return values:
     *   true (if the function was performed successfully)
     *     OR
@@ -171,7 +172,8 @@ module.exports = (function(){
     *   Uses _indexOfArticle() to find the index of an object in _articles.
     *   This object is spliced out.
     */
-  function _deleteByTitle(title) {
+  function _deleteByTitle(urlTitle) {
+    title = decodeURIComponent(urlTitle);
     const index = _indexOfArticle(title);
 
     if (index === -1) {

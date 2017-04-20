@@ -139,7 +139,7 @@ module.exports = (function(){
       // Product not found
       return false;
     } else {
-      const product = _products.splice(index, 1);
+      const product = _products.splice(index, 1)[0];
       const id = product.id;
 
       // Maintain a copy of the found object in case new properties are invalid
