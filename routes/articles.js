@@ -1,10 +1,21 @@
-var Articles = require('../db/articles.js');
+const Articles = require('../db/articles.js');
+const express = require('express');
+const router = express.Router();
 
-// returns the entire collection
+// If an empty URI GET is requested
+// serve index.html
+router.route('/')
+      .get((req, res) => {
+        res.sendFile('index.html');
+      });
+
+module.exports = router;
+
+/*// returns the entire collection
 Articles.all();
 
 // adds a new article to the collection
-Articles.add({...});
+Articles.add();
 
 // returns the correct object from the collection
 Articles.getByTitle('The%20Best%20Magpie%20Developer%20of%202016');
@@ -13,3 +24,4 @@ Articles.getByTitle('The%20Best%20Magpie%20Developer%20of%202016');
 // in the example below, it would change the title.
 // if the article is not found, returns `false`
 Articles.editByTitle('The%20Best%20Magpie%20Developer%20of%202016', { title: "..."});
+*/
