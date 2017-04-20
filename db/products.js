@@ -137,6 +137,12 @@ module.exports = (function(){
     *   This object is spliced out with newArticle, if newArticle passes validation.
     */
   function _editProduct(newProductProps) {
+
+    if (!newProductProps.id) {
+      return false;
+    }
+    newProductProps.id = Number(newProductProps.id);
+
     const index = _indexOfProduct(newProductProps.id);
 
     if (index === -1) {
@@ -197,4 +203,4 @@ module.exports = (function(){
     editProduct: _editProduct,
     deleteById: _deleteById
   };
-})/*()*/;
+})();

@@ -86,5 +86,104 @@ describe('Products Database', () => {
       });
 
     });
+
+  });
+
+  describe('getById()', () => {
+
+    it('should retrieve the product obj if given an ID', () => {
+      let product = {
+        'name'      : 'name',
+        'price'     : '9',
+        'inventory' : '9'
+      };
+      productsDB.add(product);
+      expect(productsDB.getById(0)).to.be.deep.equal(
+      {
+        'id'        : 0,
+        'name'      : 'name',
+        'price'     : 9,
+        'inventory' : 9
+      });
+    });
+
+    it('should return false if the ID is not found', () => {
+      expect(productsDB.getById(0)).to.be.equal(false);
+    });
+
+  });
+
+  describe('editProduct()', () => {
+
+    it('should edit an existing product', () => {
+      let product = {
+        'name'      : 'name',
+        'price'     : '9',
+        'inventory' : '9'
+      };
+      productsDB.add(product);
+      expect(productsDB.editProduct(
+      {
+        'id'        : '0',
+        'name'      : 'a new name',
+        'price'     : '9',
+        'inventory' : '9'
+      })).to.be.equal(true);
+      expect(productsDB.all()).to.be.deep.equal([
+      {
+        'id'        : 0,
+        'name'      : 'a new name',
+        'price'     : 9,
+        'inventory' : 9
+      }]);
+    });
+
+    describe('validation', () => {
+
+      it('should return false if given an invalid input or func cannot find item', () => {
+        expect(productsDB.editProduct({
+          'id'        : '0',
+          'name'      : 'name',
+          'price'     : '9',
+          'inventory' : '9'
+        })).to.be.equal(false);
+        let product = {
+          'name'      : 'name',
+          'price'     : '9',
+          'inventory' : '9'
+        };
+        productsDB.add(product);
+        expect(productsDB.editProduct({
+          'id'        : '0',
+          'name'      : 'a new name',
+          'price'     : '9as',
+          'inventory' : '9'
+        })).to.be.equal(false);
+      });
+
+    });
+
+  });
+
+  describe('deleteById()', () => {
+
+    it('should delete an existing product', () => {
+      let product = {
+        'name'      : 'name',
+        'price'     : '9',
+        'inventory' : '9'
+      };
+      productsDB.add(product);
+      expect(productsDB.deleteById(0)).to.be.equal(true);
+      expect(productsDB.all()).to.be.deep.equal([]);
+    });
+
+    describe('validation', () => {
+
+      it('should return false if the product is not found', () => {
+        expect(productsDB.deleteById(0)).to.be.equal(false);
+      });
+
+    });
   });
 });
