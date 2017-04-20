@@ -91,7 +91,9 @@ module.exports = (function(){
     *   Uses _indexOfArticle() to find the index of an object in _articles.
     *   This object is spliced out with newArticle, if newArticle passes validation.
     */
-  function _editByTitle(title, newArticle) {}
+  function _editByTitle(title, newArticle) {
+    //TODO
+  }
 
   return {
     all: _all,
