@@ -11,7 +11,7 @@ describe('Articles Database', () => {
     articlesDB = articles();
   });
 
-  describe('all', () => {
+  describe('all()', () => {
 
     it('should return articles', () => {
       expect(articlesDB.all()).to.be.deep.equal([]);
@@ -19,7 +19,7 @@ describe('Articles Database', () => {
 
   });
 
-  describe('add', () => {
+  describe('add()', () => {
 
     it('should add articles', () => {
       let article = {
@@ -125,4 +125,35 @@ describe('Articles Database', () => {
       });
     });
   });
+
+  describe('getByTitle()', () => {
+
+    it('should return an article object corresponding to the passed-in title', () => {
+      let article = {
+        'title'   :   'title',
+        'author'  :   'author',
+        'body'    :   'body'
+      };
+      articlesDB.add(article);
+      article = {
+        'title'   :   'this is a title',
+        'author'  :   'author',
+        'body'    :   'body'
+      };
+      articlesDB.add(article);
+      expect(articlesDB.getByTitle('title')).to.be.deep.equal(
+      {
+        'title'   :   'title',
+        'author'  :   'author',
+        'body'    :   'body',
+        'urlTitle':   'title'
+      });
+    });
+
+    it('should return false if the article is not found', () => {
+      expect(articlesDB.getByTitle('title')).to.be.equal(false);
+    });
+
+  });
+
 });
