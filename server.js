@@ -5,7 +5,17 @@ const articlesRoutes = require('./routes/articles.js');
 const productsRoutes = require('./routes/products.js');
 
 const app = express();
+const handlebars = require('express-handlebars');
 const PORT = 3000;
+
+const hbs = handlebars.create({
+  extname: '.hbs',
+  defaultLayout: 'main'
+});
+
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+
 
 // Log time upon request
 app.use( (req, res, next) => {
