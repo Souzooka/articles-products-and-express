@@ -1,0 +1,10 @@
+{{#if products.length}}
+  </hr>
+  {{#each products}}
+    <h2><a href="/products/{{id}}">Name: {{name}}</a></h2>
+    <h4>Price: {{price}}</h2>
+    </hr>
+  {{/each}}
+{{else}}
+  <p>There are no products to display!</p>
+{{/if}}

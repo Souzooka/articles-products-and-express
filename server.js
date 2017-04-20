@@ -5,6 +5,7 @@ const articlesRoutes = require('./routes/articles.js');
 const productsRoutes = require('./routes/products.js');
 
 const app = express();
+const PORT = 3000;
 
 // Log time upon request
 app.use( (req, res, next) => {
@@ -21,11 +22,8 @@ app.use('/articles', articlesRoutes);
 app.use('/products', productsRoutes);
 
 // Initialize server
-const server = app.listen(3000, () => {
-  const host = server.address().address;
-  const port = server.address().port;
-
-  console.log('Server listening at http://%s:%s', host, port);
+const server = app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}.`);
 });
 
 // For testing
