@@ -1,3 +1,4 @@
+/* jshint esversion:6 */
 module.exports = (function(){
 
   // Holds an array of article objects.
@@ -109,7 +110,13 @@ module.exports = (function(){
     *   Uses _indexOfArticle() to find an article object in the _articles array and return it.
     */
   function _getByTitle(title) {
-    //TODO
+    const index = _indexOfArticle(title);
+
+    if (index !== -1) {
+      return _articles[index];
+    } else {
+      return false;
+    }
   }
 
   /** function _editByTitle(title, newArticle)
@@ -125,7 +132,19 @@ module.exports = (function(){
     *   This object is spliced out with newArticle, if newArticle passes validation.
     */
   function _editByTitle(title, newArticle) {
-    //TODO
+    const index = _indexOfArticle(title);
+
+    if (index === -1) {
+      // Article not found
+      return false;
+    }
+    else if (_validateNewArticle(newArticle)) {
+      _articles.splice(index, 1, newArticle);
+      return true;
+    } else {
+      // Invalid article object
+      return false;
+    }
   }
 
   return {
