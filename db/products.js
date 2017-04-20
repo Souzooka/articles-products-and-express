@@ -22,34 +22,31 @@ module.exports = (function(){
 
   /** function _validateNewProduct(product)
     * Parameters:
-    *   An product object.
+    *   A product object.
     * Return values:
-    *   true (if the object contains the keys 'title' and 'body', and the title key is unique)
+    *   true (if the object contains the keys 'name', 'price' 'inventory' &&
+    *         price and inventory can be represented as numbers)
     *      OR
     *   false (any other case)
     * Behavior:
     *   Verifies if an product is eligible to be posted or not.
     *   Also strips object of any additional properties.
-    *   Also imposes length limits (configurable inside function)
-    *   ├─title:  255 bytes (255)
-    *   ├─author: 255 bytes (255)
-    *   └─body:   50 KB     (51200)
     */
   function _validateNewProduct(product) {
-    const TITLEMAXLENGTH    =   255;
-    const AUTHORMAXLENGTH   =   255;
-    const BODYMAXLENGTH     =   51200;
 
-    if ((article.title  && article.title.length   <= TITLEMAXLENGTH)  &&
-        (article.author && article.author.length  <= AUTHORMAXLENGTH) &&
-        (article.body   && article.body.length    <= BODYMAXLENGTH))  {
-
-      // strip article of any additional properties it may have.
-      article = {
-        'title'   :   article.title,
-        'author'  :   article.author,
-        'body'    :   article.body
+      // strip product of any additional properties it may have.
+      // cast strings to numbers if needed.
+      product = {
+        'name'       :   product.name,
+        'price'      :   Number(product.price),
+        'inventory'  :   Number(product.inventory)
       };
+
+    if ((product.name)                  &&
+        (!isNaN(Number(product.price))) &&
+        (!isNaN(Number(product.inventory)) && Number(pro))
+
+
 
       return true;
     } else {

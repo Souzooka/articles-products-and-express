@@ -39,12 +39,13 @@ module.exports = (function(){
 
     if ((article.title  && article.title.length   <= TITLEMAXLENGTH)  &&
         (article.author && article.author.length  <= AUTHORMAXLENGTH) &&
-        (article.body   && article.body.length    <= BODYMAXLENGTH))  {
+        (article.body   && article.body.length    <= BODYMAXLENGTH)   &&
+         _indexOfArticle(article.title) === -1)                       {
 
       // strip article of any additional properties it may have.
       article = {
         'title'   :   article.title,
-        'author'  :   article.author,
+        'author'  :   article.author || 'Unknown Author',
         'body'    :   article.body
       };
 
@@ -129,21 +130,38 @@ module.exports = (function(){
     *   false (if the function was NOT performed successfully)
     * Behavior:
     *   Uses _indexOfArticle() to find the index of an object in _articles.
-    *   This object is spliced out with newArticle, if newArticle passes validation.
+    *   This object is spliced out with new properties, if the obj with those properties passes validation.
     */
-  function _editByTitle(title, newArticle) {
+  function _editByTitle(title, newArticleProps) {
     const index = _indexOfArticle(title);
 
     if (index === -1) {
       // Article not found
       return false;
-    }
-    else if (_validateNewArticle(newArticle)) {
-      _articles.splice(index, 1, newArticle);
-      return true;
     } else {
-      // Invalid article object
-      return false;
+      let article = _articles.splice(index, 1);
+
+      // Maintain a copy of the found object in case new properties are invalid
+      let articleCopy = {};
+      Object.assign(articleCopy, article);
+
+      // Get keys and values of the properties passed in
+      const newArticleKeys = Object.keys(newArticleProps);
+      const newArticleValues = Object.values(newArticleProps);
+
+      // Copy new values over to article
+      Object.assign(article, newArticleProps);
+
+      // if the new article is valid, splice it back in.
+      // Otherwise splice our copy back in.
+      if (_validateNewArticle(article)) {
+        article.urlTitle = encodeURIComponent(article.title);
+        _articles.splice(index, 0, article);
+        return true;
+      } else {
+        _articles.splice(index, 0, articleCopy);
+        return false;
+      }
     }
   }
 
