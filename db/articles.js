@@ -38,7 +38,7 @@ module.exports = (function(){
     const BODYMAXLENGTH     =   51200;
 
     if ((article.title  && article.title.length   <= TITLEMAXLENGTH)  &&
-        (article.author && article.author.length  <= AUTHORMAXLENGTH) &&
+        (                  article.author.length  <= AUTHORMAXLENGTH) &&
         (article.body   && article.body.length    <= BODYMAXLENGTH)   &&
          _indexOfArticle(article.title) === -1)                       {
 
@@ -67,7 +67,7 @@ module.exports = (function(){
     *   Returns this result.
     */
   function _indexOfArticle(title) {
-    return array.map((article) => {
+    return _articles.map((article) => {
                   return article.title;
                 })
                 .indexOf(title);
