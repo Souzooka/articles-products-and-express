@@ -192,4 +192,4 @@ module.exports = (function(){
     editArticle: _editArticle,
     deleteByTitle: _deleteByTitle
   };
-})/*()*/;
+})();
