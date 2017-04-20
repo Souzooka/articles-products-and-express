@@ -1,7 +1,9 @@
-var chai = require('chai');
-var expect = chai.expect;
+/*jshint esversion:6*/
+const chai = require('chai');
+const expect = chai.expect;
 
-var articles = require("../db/articles.js");
+const articles = require("../db/articles.js");
+let articlesDB;
 
 describe('Articles Database', () => {
 
@@ -25,7 +27,8 @@ describe('Articles Database', () => {
         'author'  :   'author',
         'body'    :   'body'
       };
-      expect(articlesDB.add(article)).to.be.deep.equal([{'title':'title','author':'author','body':'body','urlTitle':'title'}]);
+      articlesDB.add(article);
+      expect(articlesDB.all()).to.be.deep.equal([{'title':'title','author':'author','body':'body','urlTitle':'title'}]);
     });
 
   });

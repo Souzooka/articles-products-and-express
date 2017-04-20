@@ -70,6 +70,9 @@ module.exports = (function(){
     *   └─Example: ("This is a title") => ("This%20is%20a%20title").
     */
   function _add(article) {
+    article.urlTitle = article.title;
+    _articles.unshift(article);
+    return true;
     //TODO
   }
 
