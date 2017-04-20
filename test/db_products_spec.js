@@ -64,5 +64,27 @@ describe('Products Database', () => {
       }
       ]);
     });
+
+    describe('validation', () => {
+
+      it('add() should return true if input is valid', () => {
+        let product = {
+          'name'      : 'name',
+          'price'     : '9',
+          'inventory' : '9'
+        };
+        expect(productsDB.add(product)).to.be.equal(true);
+      });
+
+      it('add() should return false if input is invalid', () => {
+        let product = {
+          'name'      : 'name',
+          'price'     : 'b9',
+          'inventory' : '9ase'
+        };
+        expect(productsDB.add(product)).to.be.equal(false);
+      });
+
+    });
   });
 });
