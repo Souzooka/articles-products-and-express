@@ -25,7 +25,7 @@ describe('Articles Database', () => {
         'author'  :   'author',
         'body'    :   'body'
       };
-      expect(articlesDB.add(article)).to.be.deep.equal([{'title':'title','author':'author','body':'body'}]);
+      expect(articlesDB.add(article)).to.be.deep.equal([{'title':'title','author':'author','body':'body','urlTitle':'title'}]);
     });
 
   });
