@@ -120,10 +120,9 @@ module.exports = (function(){
     }
   }
 
-  /** function _editByTitle(title, newArticle)
+  /** function _editArticle(newArticleProps)
     * Parameters:
-    *   The title of an article.
-    *   A new article object to replace the old one.
+    *   New article properties. NOTE: Title is required!
     * Return values:
     *   true (if the function was performed successfully)
     *     OR
@@ -132,8 +131,8 @@ module.exports = (function(){
     *   Uses _indexOfArticle() to find the index of an object in _articles.
     *   This object is spliced out with new properties, if the obj with those properties passes validation.
     */
-  function _editByTitle(title, newArticleProps) {
-    const index = _indexOfArticle(title);
+  function _editArticle(newArticleProps) {
+    const index = _indexOfArticle(newArticleProps.title);
 
     if (index === -1) {
       // Article not found
@@ -144,10 +143,6 @@ module.exports = (function(){
       // Maintain a copy of the found object in case new properties are invalid
       let articleCopy = {};
       Object.assign(articleCopy, article);
-
-      // Get keys and values of the properties passed in
-      const newArticleKeys = Object.keys(newArticleProps);
-      const newArticleValues = Object.values(newArticleProps);
 
       // Copy new values over to article
       Object.assign(article, newArticleProps);
@@ -192,7 +187,7 @@ module.exports = (function(){
     all: _all,
     add: _add,
     getByTitle: _getByTitle,
-    editByTitle: _editByTitle,
+    editArticle: _editArticle,
     deleteByTitle: _deleteByTitle
   };
 })/*()*/;
