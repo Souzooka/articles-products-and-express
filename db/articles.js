@@ -147,10 +147,34 @@ module.exports = (function(){
     }
   }
 
+  /** function _deleteByTitle(title)
+    * Parameters:
+    *   The title of an article.
+    * Return values:
+    *   true (if the function was performed successfully)
+    *     OR
+    *   false (if the function was NOT performed successfully)
+    * Behavior:
+    *   Uses _indexOfArticle() to find the index of an object in _articles.
+    *   This object is spliced out.
+    */
+  function _deleteByTitle(title) {
+    const index = _indexOfArticle(title);
+
+    if (index === -1) {
+      // Article not found
+      return false;
+    } else {
+      _articles.splice(index, 1);
+      return true;
+    }
+  }
+
   return {
     all: _all,
     add: _add,
     getByTitle: _getByTitle,
-    editByTitle: _editByTitle
+    editByTitle: _editByTitle,
+    deleteByTitle: _deleteByTitle
   };
 })/*()*/;
