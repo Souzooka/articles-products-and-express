@@ -12,7 +12,7 @@ module.exports = (function(){
     * Parameters:
     *   void
     * Return values:
-    *   Closure-scoped array products
+    *   Closure-scoped array _products
     * Behavior:
     *   Getter function. Returns products.
     */
@@ -32,13 +32,16 @@ module.exports = (function(){
     * Behavior:
     *   Verifies if an product is eligible to be posted or not.
     *   Also strips object of any additional properties.
+    *   Also imposes length limits (configurable inside function)
+    *   └─name:  255 bytes (255)
     */
   function _validateNewProduct(product) {
+    const NAMEMAXLENGTH = 255;
 
-    if ((product.name)                        &&
-        (!isNaN(Number(product.price)))       &&
-        (!isNaN(Number(product.inventory)))   &&
-        (Number(product.inventory) >= 0))     {
+    if ((product.name && product.name.length <= NAMEMAXLENGTH)  &&
+        (!isNaN(Number(product.price)))                         &&
+        (!isNaN(Number(product.inventory)))                     &&
+        (Number(product.inventory) >= 0))                       {
 
       // strip product of any additional properties it may have.
       // cast strings to numbers if needed.
