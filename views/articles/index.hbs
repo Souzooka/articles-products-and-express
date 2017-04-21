@@ -1,0 +1,15 @@
+{{#if error}}
+  <p>{{error}}</p>
+{{/if}}
+{{#if articles.length}}
+  <hr>
+  {{#each articles}}
+    <h2><a href="/products/{{urlTitle}}">{{title}}</a></h2>
+    <h4>{{author}}</h4>
+    <h4>{{body}}</h4>
+    <hr>
+  {{/each}}
+{{else}}
+  <p>There are no products to display!</p>
+{{/if}}
+  <a href="/products/new"><span>Post a new product.</span></a>
