@@ -8,6 +8,9 @@
   <input type="number" name="inventory" value="{{inventory}}"><br><br>
   <button type="submit">Edit resource</button>
 </form>
+{{#if error}}
+  <p>{{error}}</p>
+{{/if}}
 <form method="POST" action="/products/{{id}}?_method=DELETE">
   <button type="submit">Delete resource</button>
 </form>

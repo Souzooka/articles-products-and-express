@@ -42,12 +42,20 @@ router.route('/:id')
         if (productDatabase.editProduct(req.body)) {
           const product = productDatabase.getById(Number(req.params.id));
           res.render('products/product', product);
+        } else {
+          const error = { 'error': 'Error: Invalid form information!' };
+          Object.assign(error, req.body);
+          res.render('products/edit', error);
         }
       })
       .delete((req, res) => {
         if (productDatabase.deleteById(req.params.id)) {
           const products = { 'products': productDatabase.all() };
           res.render('products/index', products);
+        } else {
+          const error = { 'error': 'Error: Somehow hell froze over and deleting this resource failed.' };
+          Object.assign(error, req.body);
+          res.render('products/edit', error);
         }
       });
 

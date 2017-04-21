@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const articlesRoutes = require('./routes/articles.js');
 const productsRoutes = require('./routes/products.js');
+const indexRoutes = require('./routes/index.js');
 
 const app = express();
 const handlebars = require('express-handlebars');
@@ -32,6 +33,7 @@ app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({extended: false}));
 
 // Routes
+app.use('/', indexRoutes);
 app.use('/articles', articlesRoutes);
 app.use('/products', productsRoutes);
 
