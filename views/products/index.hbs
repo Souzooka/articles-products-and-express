@@ -1,10 +1,12 @@
 {{#if products.length}}
-  </hr>
+  <hr>
   {{#each products}}
-    <h2><a href="/products/{{id}}">Name: {{name}}</a></h2>
-    <h4>Price: {{price}}</h2>
-    </hr>
+    <h2>Name: <a href="/products/{{id}}">{{name}}</a></h2>
+    <h4>Price: {{price}} USD</h4>
+    <h4>Inventory: {{inventory}} units</h4>
+    <hr>
   {{/each}}
 {{else}}
   <p>There are no products to display!</p>
 {{/if}}
+  <a href="/products/new"><span>Post a new product.</span></a>

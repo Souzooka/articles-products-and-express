@@ -1,0 +1,15 @@
+<span>Post a new product:</span>
+<hr>
+<form action="/products" method="post" enctype="application/x-www-form-urlencoded">
+  Name:<br>
+  <input type="text" name="name"><br>
+  Price (in USD):<br>
+  <input type="number" name="price"><br>
+  Inventory:<br>
+  <input type="number" name="inventory"><br><br>
+  <input type="submit">
+</form>
+{{#if error}}
+  <p>{{error}}</p>
+{{/if}}
+<hr>
