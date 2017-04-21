@@ -1,27 +1,73 @@
-const Articles = require('../db/articles.js');
+/*jshint esversion:6*/
 const express = require('express');
 const router = express.Router();
+const articleDatabase = require('../db/articles.js');
 
-// If an empty URI GET is requested
-// serve index.html
 router.route('/')
+      // Retrieves the index page
       .get((req, res) => {
-        res.sendFile('index.html');
+        const articles = { 'articles': articleDatabase.all() };
+        res.render('articles/index', articles);
+      })
+      // Creates a new product if successful, and brings user back to the index.
+      // Otherwise alerts the user with an error.
+      .post((req, res) => {
+        if (articleDatabase.add(req.body)) {
+          const articles = { 'articles': articleDatabase.all() };
+          res.render('articles/index', articles);
+        } else {
+          const error = { 'error': 'Error: Invalid form information!'};
+          res.render('articles/new', error);
+        }
       });
 
+// Brings the user to a form which will submit a POST for a new item
+router.route('/new')
+      .get((req, res) => {
+        res.render('articles/new', null);
+      });
+
+router.route('/:title')
+      .get((req, res) => {
+        const article = articleDatabase.getByTitle(req.params.title);
+        if (article) {
+          res.render('articles/article', article);
+        } else {
+          res.sendStatus(404);
+        }
+      })
+      .put((req, res) => {
+        req.body.title = req.params.title;
+        if (articleDatabase.editArticle(req.body)) {
+          const article = articleDatabase.getByTitle(req.params.title);
+          res.render('articles/article', article);
+        } else {
+          const error = { 'error': 'Error: Invalid form information!' };
+          Object.assign(error, req.body);
+          res.render('articles/edit', error);
+        }
+      })
+      .delete((req, res) => {
+        if (articleDatabase.deleteByTitle(req.params.title)) {
+          const articles = { 'articles': articleDatabase.all() };
+          res.render('articles/index', articles);
+        } else {
+          const error = { 'error': 'Error: Somehow hell froze over and deleting this resource failed.' };
+          Object.assign(error, req.body);
+          res.render('articles/edit', error);
+        }
+      });
+
+router.route('/:title/edit')
+      .get((req, res) => {
+        const article = articleDatabase.getByTitle(req.params.title);
+        if (article) {
+          res.render('articles/edit', article);
+        } else {
+          res.sendStatus(404);
+        }
+      });
+
+
+
 module.exports = router;
-
-/*// returns the entire collection
-Articles.all();
-
-// adds a new article to the collection
-Articles.add();
-
-// returns the correct object from the collection
-Articles.getByTitle('The%20Best%20Magpie%20Developer%20of%202016');
-
-// finds an article in the collection by its title, if found - updates the article based on object passed as the second parameter then returns `true`
-// in the example below, it would change the title.
-// if the article is not found, returns `false`
-Articles.editByTitle('The%20Best%20Magpie%20Developer%20of%202016', { title: "..."});
-*/

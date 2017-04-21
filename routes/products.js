@@ -30,7 +30,6 @@ router.route('/new')
 router.route('/:id')
       .get((req, res) => {
         const product = productDatabase.getById(Number(req.params.id));
-        console.log(req.params.id);
         if (product) {
           res.render('products/product', product);
         } else {

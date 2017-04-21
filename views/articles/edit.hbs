@@ -1,16 +1,14 @@
 
-<form method="POST" action="/products/{{title}}?_method=PUT">
-  Title:<br>
-  <input type="text" name="title" value="{{title}}"><br>
+<form method="POST" action="/articles/{{title}}?_method=PUT">
   Author:<br>
   <input type="text" name="author" value="{{author}}"><br>
-  Inventory:<br>
+  Body:<br>
   <input type="text" name="body" value="{{body}}"><br><br>
   <button type="submit">Edit resource</button>
 </form>
 {{#if error}}
   <p>{{error}}</p>
 {{/if}}
-<form method="POST" action="/products/{{title}}?_method=DELETE">
+<form method="POST" action="/articles/{{title}}?_method=DELETE">
   <button type="submit">Delete resource</button>
 </form>
