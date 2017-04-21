@@ -1,6 +1,7 @@
 /*jshint esversion:6*/
 const express = require('express');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 const articlesRoutes = require('./routes/articles.js');
 const productsRoutes = require('./routes/products.js');
 
@@ -22,6 +23,9 @@ app.use( (req, res, next) => {
   console.log(`Connection received. Time: ${new Date().toUTCString()}`);
   next();
 });
+
+// method-override
+app.use(methodOverride('_method'));
 
 // parse application/x-www-form-urlencoded
 // attach to req.body

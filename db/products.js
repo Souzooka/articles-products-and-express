@@ -117,6 +117,7 @@ module.exports = (function(){
     */
   function _getById(id) {
     const index = _indexOfProduct(id);
+    console.log(_all())
 
     if (index !== -1) {
       return _products[index];
@@ -174,7 +175,7 @@ module.exports = (function(){
 
   /** function _deleteById(id)
     * Parameters:
-    *   The title of an product.
+    *   The id of an product.
     * Return values:
     *   true (if the function was performed successfully)
     *     OR
@@ -183,8 +184,9 @@ module.exports = (function(){
     *   Uses _indexOfProduct() to find the index of an object in _products.
     *   This object is spliced out.
     */
-  function _deleteById(title) {
-    const index = _indexOfProduct(title);
+  function _deleteById(id) {
+    id = Number(id);
+    const index = _indexOfProduct(id);
 
     if (index === -1) {
       // Product not found
