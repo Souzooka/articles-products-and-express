@@ -104,7 +104,7 @@ module.exports = (function(){
     }
   }
 
-  /** function _getByTitle(title)
+  /** function _getByTitle(urlTitle)
     * Parameters:
     *   The urlTitle of an article.
     * Return values:

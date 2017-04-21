@@ -1,5 +1,5 @@
 
-<form method="POST" action="/articles/{{title}}?_method=PUT">
+<form method="POST" action="/articles/{{urlTitle}}?_method=PUT">
   Author:<br>
   <input type="text" name="author" value="{{author}}"><br>
   Body:<br>
@@ -9,6 +9,6 @@
 {{#if error}}
   <p>{{error}}</p>
 {{/if}}
-<form method="POST" action="/articles/{{title}}?_method=DELETE">
+<form method="POST" action="/articles/{{urlTitle}}?_method=DELETE">
   <button type="submit">Delete resource</button>
 </form>
