@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
+const analyticsTracker = require('./middleware/analyticsTracker.js');
 const articlesRoutes = require('./routes/articles.js');
 const productsRoutes = require('./routes/products.js');
 const indexRoutes = require('./routes/index.js');
@@ -10,6 +11,7 @@ const app = express();
 const handlebars = require('express-handlebars');
 const PORT = 3000;
 
+// Create Handlebars Engine
 const hbs = handlebars.create({
   extname: '.hbs',
   defaultLayout: 'main'
@@ -18,12 +20,8 @@ const hbs = handlebars.create({
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
-
 // Log time upon request
-app.use( (req, res, next) => {
-  console.log(`Connection received. Time: ${new Date().toUTCString()}`);
-  next();
-});
+app.use(analyticsTracker);
 
 // method-override
 app.use(methodOverride('_method'));
