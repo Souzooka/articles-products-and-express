@@ -19,19 +19,13 @@ module.exports = (function(){
     *   Getter function. Returns products.
     */
   function _all() {
-    let promise = new Promise((resolve, reject) => {
-      resolve(db.any('SELECT * FROM products;', [true]));
-      reject();
-    });
-
-    promise.then( (data) => {
+    return db.any('SELECT * FROM products;', [true])
+    .then( (data) => {
       return data;
     })
-    .catch(function(error) {
+    .catch( (error) => {
       console.log('all() ' + error);
     });
-
-    return promise;
   }
 
   /** function _validateNewProduct(product)
@@ -115,19 +109,14 @@ module.exports = (function(){
     *   Uses _indexOfProduct() to find an product object in the _products array and return it.
     */
   function _getById(id) {
-    let promise = new Promise((resolve, reject) => {
-      resolve(db.any(`SELECT * FROM products WHERE id = ${id};`, [true]));
-      reject();
-    });
-
-    promise.then( (data) => {
+    id = Number(id);
+    return db.any(`SELECT * FROM products WHERE id = ${id};`, [true])
+    .then( (data) => {
       return data;
     })
-    .catch(function(error) {
-      return new Error('Product not found');
+    .catch( (error) => {
+      return false;
     });
-
-    return promise;
   }
 
   /** function _editProduct(newProductProps)
@@ -190,15 +179,13 @@ module.exports = (function(){
     */
   function _deleteById(id) {
     id = Number(id);
-    const index = _indexOfProduct(id);
-
-    if (index === -1) {
-      // Product not found
-      return false;
-    } else {
-      _products.splice(index, 1);
+    return db.any(`DELETE FROM products WHERE products.id = ${id};`, [true])
+    .then( (data) => {
       return true;
-    }
+    })
+    .catch(function(error) {
+      return false;
+    });
   }
 
 

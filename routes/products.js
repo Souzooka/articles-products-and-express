@@ -7,9 +7,7 @@ router.route('/')
 
   // Retrieves the index page
   .get((req, res) => {
-    let promise = new Promise((resolve, reject) => {
-      resolve(productDatabase.all());
-    })
+    productDatabase.all()
     .then( (data) => {
       const products = { 'products': data };
       res.render('products/index', products);
@@ -39,12 +37,14 @@ router.route('/new')
 
 router.route('/:id')
   .get((req, res) => {
-    let promise = new Promise((resolve, reject) => {
-      resolve(productDatabase.getById(Number(req.params.id)));
-    })
+    productDatabase.getById(Number(req.params.id))
     .then( (data) => {
       const product = data[0];
-      res.render('products/product', product);
+      if (data) {
+        res.render('products/product', product);
+      } else {
+        throw new Error('err');
+      }
     })
     .catch( (err) => {
       console.log('GET /PRODUCTS/:id ERROR ' + err);
@@ -54,7 +54,7 @@ router.route('/:id')
   .put((req, res) => {
     req.body.id = req.params.id;
     if (productDatabase.editProduct(req.body)) {
-      const product = productDatabase.getById(Number(req.params.id));
+      const product = productDatabase.getById(req.params.id);
       res.render('products/product', product);
     } else {
       const error = { 'error': 'Error: Invalid form information!' };
@@ -63,24 +63,37 @@ router.route('/:id')
     }
   })
   .delete((req, res) => {
-    if (productDatabase.deleteById(req.params.id)) {
-      const products = { 'products': productDatabase.all() };
-      res.render('products/index', products);
-    } else {
+    productDatabase.deleteById(req.params.id)
+    .then( (data) => {
+      if (data) {
+        res.redirect('/products');
+      } else {
+        throw new Error(data);
+      }
+    })
+    .catch( (err) => {
       const error = { 'error': 'Error: Somehow hell froze over and deleting this resource failed.' };
       Object.assign(error, req.body);
       res.render('products/edit', error);
-    }
+      console.log('DELETE products/:id error' + err);
+    });
   });
 
 router.route('/:id/edit')
   .get((req, res) => {
-    const product = productDatabase.getById(Number(req.params.id));
-    if (product) {
-      res.render('products/edit', product);
-    } else {
+    productDatabase.getById(Number(req.params.id))
+    .then( (data) => {
+      const product = data[0];
+      if (data) {
+        res.render('products/edit', product);
+      } else {
+        throw new Error('err');
+      }
+    })
+    .catch( (err) => {
+      console.log('GET /PRODUCTS/:id/edit ERROR ' + err);
       res.sendStatus(404);
-    }
+    });
   });
 
 
