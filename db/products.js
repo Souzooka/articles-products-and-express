@@ -49,7 +49,7 @@ module.exports = (function(){
     *   Also imposes length limits (configurable inside function)
     *   └─name:  255 bytes (255)
     */
-  function _validateNewProduct(product) {
+/*  function _validateNewProduct(product) {
     const NAMEMAXLENGTH = 255;
     const productTemplate = {
         'name'       :   product.name,
@@ -74,7 +74,7 @@ module.exports = (function(){
       return false;
     }
   }
-
+*/
   /** function _add(product)
     * Parameters:
     *   An obj with these keys:
@@ -91,22 +91,17 @@ module.exports = (function(){
     *   id is generated from variable productID, and productID is incremented when it is used.
     */
   function _add(product) {
-    if (_validateNewProduct(product)) {
-        let promise = new Promise((resolve, reject) => {
-        resolve(db.any(`INSERT INTO products (name, price, inventory)
-                        VALUES (${product.name}, ${product.price}, ${product.inventory}});`, [true]));
-        reject();
-      });
-
-      promise.then( () => {
-        return true;
-      })
-      .catch(function(error) {
-        console.log('add() ' + error);
-      });
-    } else {
+    product.price = Number(product.price);
+    product.inventory = Number(product.inventory);
+    return db.any(`INSERT INTO products (name, price, inventory)
+            VALUES ('${product.name}', ${product.price}, ${product.inventory});`, [true])
+    .then( () => {
+      return true;
+    })
+    .catch(function(error) {
+      console.log('add() ' + error);
       return false;
-    }
+    });
   }
 
   /** function _getById(id)

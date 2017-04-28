@@ -22,13 +22,13 @@ router.route('/')
   // Creates a new product if successful, and brings user back to the index.
   // Otherwise alerts the user with an error.
   .post((req, res) => {
-    if (productDatabase.add(req.body)) {
-      const products = { 'products': productDatabase.all() };
-      res.render('products/index', products);
-    } else {
-      const error = { 'error': 'Error: Invalid form information!'};
-      res.render('products/new', error);
-    }
+    productDatabase.add(req.body)
+    .then( (data) => {
+      res.redirect('/products');
+    })
+    .catch( (err) => {
+      console.log('POST /PRODUCTS ERROR ' + err);
+    });
   });
 
 // Brings the user to a form which will submit a POST for a new item
