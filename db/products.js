@@ -120,14 +120,19 @@ module.exports = (function(){
     *   Uses _indexOfProduct() to find an product object in the _products array and return it.
     */
   function _getById(id) {
-    const index = _indexOfProduct(id);
-    console.log(_all())
+    let promise = new Promise((resolve, reject) => {
+      resolve(db.any(`SELECT * FROM products WHERE id = ${id};`, [true]));
+      reject();
+    });
 
-    if (index !== -1) {
-      return _products[index];
-    } else {
-      return false;
-    }
+    promise.then( (data) => {
+      return data;
+    })
+    .catch(function(error) {
+      return new Error('Product not found');
+    });
+
+    return promise;
   }
 
   /** function _editProduct(newProductProps)

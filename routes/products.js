@@ -33,50 +33,55 @@ router.route('/')
 
 // Brings the user to a form which will submit a POST for a new item
 router.route('/new')
-      .get((req, res) => {
-        res.render('products/new', null);
-      });
+  .get((req, res) => {
+    res.render('products/new', null);
+  });
 
 router.route('/:id')
-      .get((req, res) => {
-        const product = productDatabase.getById(Number(req.params.id));
-        if (product) {
-          res.render('products/product', product);
-        } else {
-          res.sendStatus(404);
-        }
-      })
-      .put((req, res) => {
-        req.body.id = req.params.id;
-        if (productDatabase.editProduct(req.body)) {
-          const product = productDatabase.getById(Number(req.params.id));
-          res.render('products/product', product);
-        } else {
-          const error = { 'error': 'Error: Invalid form information!' };
-          Object.assign(error, req.body);
-          res.render('products/edit', error);
-        }
-      })
-      .delete((req, res) => {
-        if (productDatabase.deleteById(req.params.id)) {
-          const products = { 'products': productDatabase.all() };
-          res.render('products/index', products);
-        } else {
-          const error = { 'error': 'Error: Somehow hell froze over and deleting this resource failed.' };
-          Object.assign(error, req.body);
-          res.render('products/edit', error);
-        }
-      });
+  .get((req, res) => {
+    let promise = new Promise((resolve, reject) => {
+      resolve(productDatabase.getById(Number(req.params.id)));
+    })
+    .then( (data) => {
+      const product = data[0];
+      res.render('products/product', product);
+    })
+    .catch( (err) => {
+      console.log('GET /PRODUCTS/:id ERROR ' + err);
+      res.sendStatus(404);
+    });
+  })
+  .put((req, res) => {
+    req.body.id = req.params.id;
+    if (productDatabase.editProduct(req.body)) {
+      const product = productDatabase.getById(Number(req.params.id));
+      res.render('products/product', product);
+    } else {
+      const error = { 'error': 'Error: Invalid form information!' };
+      Object.assign(error, req.body);
+      res.render('products/edit', error);
+    }
+  })
+  .delete((req, res) => {
+    if (productDatabase.deleteById(req.params.id)) {
+      const products = { 'products': productDatabase.all() };
+      res.render('products/index', products);
+    } else {
+      const error = { 'error': 'Error: Somehow hell froze over and deleting this resource failed.' };
+      Object.assign(error, req.body);
+      res.render('products/edit', error);
+    }
+  });
 
 router.route('/:id/edit')
-      .get((req, res) => {
-        const product = productDatabase.getById(Number(req.params.id));
-        if (product) {
-          res.render('products/edit', product);
-        } else {
-          res.sendStatus(404);
-        }
-      });
+  .get((req, res) => {
+    const product = productDatabase.getById(Number(req.params.id));
+    if (product) {
+      res.render('products/edit', product);
+    } else {
+      res.sendStatus(404);
+    }
+  });
 
 
 
