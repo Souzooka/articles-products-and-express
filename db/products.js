@@ -19,7 +19,7 @@ module.exports = (function(){
     *   Getter function. Returns products.
     */
   function _all() {
-    return db.any('SELECT * FROM products;', [true])
+    return db.any('SELECT * FROM $1~;', ['products'])
     .then( (data) => {
       return data;
     })
@@ -85,10 +85,10 @@ module.exports = (function(){
     *   id is generated from variable productID, and productID is incremented when it is used.
     */
   function _add(product) {
-    product.price = Number(product.price);
-    product.inventory = Number(product.inventory);
-    return db.any(`INSERT INTO products (name, price, inventory)
-            VALUES ('${product.name}', ${product.price}, ${product.inventory});`, [true])
+    product.price = pgp.as.number(Number(product.price));
+    product.inventory = pgp.as.number(Number(product.inventory));
+    return db.any(`INSERT INTO $1~ (name, price, inventory)
+            VALUES ($2, $3, $4);`, ['products', product.name, product.price, product.inventory])
     .then( () => {
       return true;
     })
@@ -109,8 +109,8 @@ module.exports = (function(){
     *   Uses _indexOfProduct() to find an product object in the _products array and return it.
     */
   function _getById(id) {
-    id = Number(id);
-    return db.any(`SELECT * FROM products WHERE id = ${id};`, [true])
+    id = pgp.as.number(Number(id));
+    return db.any(`SELECT * FROM $1~ WHERE id = $2;`, ['products', id])
     .then( (data) => {
       return data;
     })
@@ -131,16 +131,17 @@ module.exports = (function(){
     *   This object is spliced out with newArticle, if newArticle passes validation.
     */
   function _editProduct(product) {
-    product.price = Number(product.price);
-    product.inventory = Number(product.inventory);
-    product.id = Number(product.id);
-    return db.any(`UPDATE products
-                   SET price = ${product.price}, inventory = ${product.inventory}, name = '${product.name}'
-                   WHERE products.id = ${product.id};`, [true])
+    product.price = pgp.as.number(Number(product.price));
+    product.inventory = pgp.as.number(Number(product.inventory));
+    product.id = pgp.as.number(Number(product.id));
+    return db.none('UPDATE $1~ ' +
+                   'SET price = $2, inventory = $3, name = $4 ' +
+                   'WHERE products.id = $5;', ['products', product.price, product.inventory, product.name, product.id])
     .then( (data) => {
       return true;
     })
     .catch(function(error) {
+      console.log(error)
       return false;
     });
   }
@@ -157,8 +158,8 @@ module.exports = (function(){
     *   This object is spliced out.
     */
   function _deleteById(id) {
-    id = Number(id);
-    return db.any(`DELETE FROM products WHERE products.id = ${id};`, [true])
+    id = pgp.as.number(Number(id));
+    return db.none(`DELETE FROM $1~ WHERE products.id = $2;`, ['products', id])
     .then( (data) => {
       return true;
     })
