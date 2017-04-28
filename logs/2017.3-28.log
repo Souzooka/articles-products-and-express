@@ -58,3 +58,10 @@ GET /articles/new Fri, 28 Apr 2017 21:02:12 GMT
 POST /articles Fri, 28 Apr 2017 21:02:19 GMT
 GET /articles Fri, 28 Apr 2017 21:02:19 GMT
 GET /articles/Testing Fri, 28 Apr 2017 21:02:21 GMT
+GET /articles/Man%20finds%20cats Fri, 28 Apr 2017 21:03:59 GMT
+GET /articles//edit Fri, 28 Apr 2017 21:04:00 GMT
+GET /articles Fri, 28 Apr 2017 21:04:02 GMT
+GET /articles/Man%20finds%20cats Fri, 28 Apr 2017 21:04:04 GMT
+GET /articles//edit Fri, 28 Apr 2017 21:05:18 GMT
+GET /articles/Man%20finds%20cats Fri, 28 Apr 2017 21:06:11 GMT
+GET /articles/Man%20finds%20cats/edit Fri, 28 Apr 2017 21:06:13 GMT

@@ -4,37 +4,37 @@ const router = express.Router();
 const articleDatabase = require('../db/articles.js');
 
 router.route('/')
-      // Retrieves the index page
-      .get((req, res) => {
-        articleDatabase.all()
-        .then( (data) => {
-          data.forEach((v, i) => {
-            data[i].urlTitle = encodeURIComponent(data[i].title);
-          });
-          const articles = { 'articles': data };
-          res.render('articles/index', articles);
-        })
-        .catch( (err) => {
-          console.log('GET /ARTICLES ERROR ' + err);
-        });
-      })
-      // Creates a new product if successful, and brings user back to the index.
-      // Otherwise alerts the user with an error.
-      .post((req, res) => {
-        articleDatabase.add(req.body)
-        .then( (data) => {
-          res.redirect('/articles');
-        })
-        .catch( (err) => {
-          console.log('POST /ARTICLES ERROR ' + err);
-        });
+  // Retrieves the index page
+  .get((req, res) => {
+    articleDatabase.all()
+    .then( (data) => {
+      data.forEach((v, i) => {
+        data[i].urlTitle = encodeURIComponent(data[i].title);
       });
+      const articles = { 'articles': data };
+      res.render('articles/index', articles);
+    })
+    .catch( (err) => {
+      console.log('GET /ARTICLES ERROR ' + err);
+    });
+  })
+  // Creates a new product if successful, and brings user back to the index.
+  // Otherwise alerts the user with an error.
+  .post((req, res) => {
+    articleDatabase.add(req.body)
+    .then( (data) => {
+      res.redirect('/articles');
+    })
+    .catch( (err) => {
+      console.log('POST /ARTICLES ERROR ' + err);
+    });
+  });
 
 // Brings the user to a form which will submit a POST for a new item
 router.route('/new')
-      .get((req, res) => {
-        res.render('articles/new', null);
-      });
+  .get((req, res) => {
+    res.render('articles/new', null);
+  });
 
 router.route('/:title')
   .get((req, res) => {
@@ -42,6 +42,9 @@ router.route('/:title')
     .then( (data) => {
       const article = data[0];
       if (data) {
+        data.forEach((v, i) => {
+          data[i].urlTitle = encodeURIComponent(data[i].title);
+        });
         res.render('articles/article', article);
       } else {
         throw new Error('err');
@@ -74,15 +77,21 @@ router.route('/:title')
   });
 
 router.route('/:title/edit')
-      .get((req, res) => {
-        const article = articleDatabase.getByTitle(req.params.title);
-        if (article) {
-          res.render('articles/edit', article);
-        } else {
-          res.sendStatus(404);
-        }
-      });
-
+  .get((req, res) => {
+    articleDatabase.getByTitle(req.params.title)
+    .then( (data) => {
+      const article = data[0];
+      if (data) {
+        res.render('articles/edit', article);
+      } else {
+        throw new Error('err');
+      }
+    })
+    .catch( (err) => {
+      console.log('GET /ARTICLES/:title/edit ERROR ' + err);
+      res.sendStatus(404);
+    });
+  });
 
 
 module.exports = router;

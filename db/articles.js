@@ -118,6 +118,7 @@ module.exports = (function(){
     */
   function _getByTitle(urlTitle) {
     const title = decodeURIComponent(urlTitle);
+    console.log(title)
     return db.any(`SELECT * FROM $1~ WHERE title = $2;`, ['articles', title])
     .then( (data) => {
       return data;
