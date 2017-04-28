@@ -13,8 +13,20 @@ describe('Products Database', () => {
 
   describe('all()', () => {
 
-    it('should return products', () => {
-      expect(productsDB.all()).to.be.deep.equal([]);
+    it('should return products', (done) => {
+      let promise = new Promise((resolve, reject) => {
+        resolve(productsDB.all());
+        reject('error');
+      });
+
+      promise.then( (data) => {
+        expect(data).to.be.an('array');
+        done();
+      })
+      .catch( (err) => {
+        console.log(err);
+        done();
+      });
     });
 
   });
@@ -22,18 +34,38 @@ describe('Products Database', () => {
   describe('add()', () => {
 
     it('should add products', () => {
+      let length = 0;
+      let promise = new Promise((resolve, reject) => {
+        resolve(productsDB.all());
+        reject('error');
+      });
+
+      promise.then( (data) => {
+        length = data.length;
+      })
+      .catch( (err) => {
+        console.log(err);
+      });
+
       let product = {
         'name'      : 'name',
-        'price'     : '9',
+        'price'     : '9.99',
         'inventory' : '9'
       };
-      productsDB.add(product);
-      expect(productsDB.all()).to.be.deep.equal([{
-        'id'        : 0,
-        'name'      : 'name',
-        'price'     : 9,
-        'inventory' : 9
-      }]);
+
+      let promise2 = new Promise((resolve, reject) => {
+        productsDB.add(product);
+        resolve(productsDB.all());
+        reject('error');
+      });
+
+      promise2.then( (data) => {
+        expect(data.length).to.be.equal(length+1);
+        done();
+      })
+      .catch( (err) => {
+        console.log(err);
+      });
     });
 
     it('should be able to add more than 1 product', () => {

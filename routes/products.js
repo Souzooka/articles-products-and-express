@@ -4,22 +4,32 @@ const router = express.Router();
 const productDatabase = require('../db/products.js');
 
 router.route('/')
-      // Retrieves the index page
-      .get((req, res) => {
-        const products = { 'products': productDatabase.all() };
-        res.render('products/index', products);
-      })
-      // Creates a new product if successful, and brings user back to the index.
-      // Otherwise alerts the user with an error.
-      .post((req, res) => {
-        if (productDatabase.add(req.body)) {
-          const products = { 'products': productDatabase.all() };
-          res.render('products/index', products);
-        } else {
-          const error = { 'error': 'Error: Invalid form information!'};
-          res.render('products/new', error);
-        }
-      });
+
+  // Retrieves the index page
+  .get((req, res) => {
+    let promise = new Promise((resolve, reject) => {
+      resolve(productDatabase.all());
+    })
+    .then( (data) => {
+      const products = { 'products': data };
+      res.render('products/index', products);
+    })
+    .catch( (err) => {
+      console.log('GET /PRODUCTS ERROR ' + err);
+    });
+  })
+
+  // Creates a new product if successful, and brings user back to the index.
+  // Otherwise alerts the user with an error.
+  .post((req, res) => {
+    if (productDatabase.add(req.body)) {
+      const products = { 'products': productDatabase.all() };
+      res.render('products/index', products);
+    } else {
+      const error = { 'error': 'Error: Invalid form information!'};
+      res.render('products/new', error);
+    }
+  });
 
 // Brings the user to a form which will submit a POST for a new item
 router.route('/new')

@@ -4,12 +4,18 @@ CREATE DATABASE articles_and_products;
 
 \c articles_and_products
 
+DROP USER IF EXISTS articles_and_products_user;
+CREATE USER articles_and_products_user WITH LOGIN PASSWORD 'password';
+
 --create tables
 CREATE TABLE IF NOT EXISTS articles
 (
-  title VARCHAR(255) NOT NULL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL UNIQUE,
   author VARCHAR(255) NOT NULL,
-  content VARCHAR(65535) NOT NULL
+  content VARCHAR(65535) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS products
@@ -17,7 +23,9 @@ CREATE TABLE IF NOT EXISTS products
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   price MONEY NOT NULL,
-  inventory INT NOT NULL
+  inventory INT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 --insert some data

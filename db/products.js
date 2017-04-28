@@ -1,12 +1,14 @@
 /* jshint esversion:6 */
 module.exports = (function(){
 
-  // Holds an array of product objects.
-  // no touch
-  let _products = [];
-
-  // Counter for productID
-  let productID = 0;
+  // import pg-promise
+  const pgp = require('pg-promise')();
+  const db = pgp({
+    host: 'localhost',
+    port: 5432,
+    database: 'articles_and_products',
+    user: 'souzooka'
+  });
 
   /** function _all()
     * Parameters:
@@ -17,7 +19,19 @@ module.exports = (function(){
     *   Getter function. Returns products.
     */
   function _all() {
-    return _products;
+    let promise = new Promise((resolve, reject) => {
+      resolve(db.any('SELECT * FROM products;', [true]));
+      reject();
+    });
+
+    promise.then( (data) => {
+      return data;
+    })
+    .catch(function(error) {
+      console.log('all() ' + error);
+    });
+
+    return promise;
   }
 
   /** function _validateNewProduct(product)
@@ -61,24 +75,6 @@ module.exports = (function(){
     }
   }
 
-  /** function _indexOfProduct(id)
-    * Parameters:
-    *   An product title.
-    * Return values:
-    *   Number representing the position of an product inside of the _products array.
-    *     OR
-    *   -1 if the product is not found.
-    * Behaid
-    *   Creates an array of each product's title properties, then calls indexOf(id) on this array.
-    *   Returns this result.
-    */
-  function _indexOfProduct(id) {
-    return _products.map((product) => {
-                  return product.id;
-                })
-                .indexOf(id);
-  }
-
   /** function _add(product)
     * Parameters:
     *   An obj with these keys:
@@ -96,10 +92,18 @@ module.exports = (function(){
     */
   function _add(product) {
     if (_validateNewProduct(product)) {
-      product.id = productID;
-      ++productID;
-      _products.push(product);
-      return true;
+        let promise = new Promise((resolve, reject) => {
+        resolve(db.any(`INSERT INTO products (name, price, inventory)
+                        VALUES (${product.name}, ${product.price}, ${product.inventory}});`, [true]));
+        reject();
+      });
+
+      promise.then( () => {
+        return true;
+      })
+      .catch(function(error) {
+        console.log('add() ' + error);
+      });
     } else {
       return false;
     }
