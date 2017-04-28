@@ -118,7 +118,6 @@ module.exports = (function(){
     */
   function _getByTitle(urlTitle) {
     const title = decodeURIComponent(urlTitle);
-    console.log(title)
     return db.any(`SELECT * FROM $1~ WHERE title = $2;`, ['articles', title])
     .then( (data) => {
       return data;
@@ -139,33 +138,18 @@ module.exports = (function(){
     *   Uses _indexOfArticle() to find the index of an object in _articles.
     *   This object is spliced out with new properties, if the obj with those properties passes validation.
     */
-  function _editArticle(newArticleProps) {
-    const index = _indexOfArticle(newArticleProps.title);
-
-    if (index === -1) {
-      // Article not found
+  function _editArticle(article) {
+    article.title = decodeURIComponent(article.title);
+    return db.none('UPDATE $1~ ' +
+                   'SET author = $2, content = $3 ' +
+                   'WHERE articles.title = $4;', ['articles', article.author, article.body, article.title])
+    .then( (data) => {
+      return true;
+    })
+    .catch(function(error) {
+      console.log(error)
       return false;
-    } else {
-      let article = _articles.splice(index, 1)[0];
-
-      // Maintain a copy of the found object in case new properties are invalid
-      let articleCopy = {};
-      Object.assign(articleCopy, article);
-
-      // Copy new values over to articleS
-      Object.assign(article, newArticleProps);
-
-      // if the new article is valid, splice it back in.
-      // Otherwise splice our copy back in.
-      if (_validateNewArticle(article)) {
-        article.urlTitle = encodeURIComponent(article.title);
-        _articles.splice(index, 0, article);
-        return true;
-      } else {
-        _articles.splice(index, 0, articleCopy);
-        return false;
-      }
-    }
+    });
   }
 
   /** function _deleteByTitle(urlTitle)
@@ -181,15 +165,13 @@ module.exports = (function(){
     */
   function _deleteByTitle(urlTitle) {
     title = decodeURIComponent(urlTitle);
-    const index = _indexOfArticle(title);
-
-    if (index === -1) {
-      // Article not found
-      return false;
-    } else {
-      _articles.splice(index, 1);
+    return db.none(`DELETE FROM $1~ WHERE articles.title = $2;`, ['articles', title])
+    .then( (data) => {
       return true;
-    }
+    })
+    .catch(function(error) {
+      return false;
+    });
   }
 
   return {
