@@ -88,6 +88,15 @@ module.exports = (function(){
     *   └─Example: ("This is a title") => ("This%20is%20a%20title").
     */
   function _add(article) {
+    return db.none(`INSERT INTO $1~ (title, author, content)
+            VALUES ($2, $3, $4);`, ['articles', article.title, article.author, article.body])
+    .then( () => {
+      return true;
+    })
+    .catch(function(error) {
+      console.log('add() ' + error);
+      return false;
+    });
     if (_validateNewArticle(article)) {
       article.urlTitle = encodeURIComponent(article.title);
       _articles.unshift(article);

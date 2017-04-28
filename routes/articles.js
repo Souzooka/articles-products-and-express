@@ -21,13 +21,13 @@ router.route('/')
       // Creates a new product if successful, and brings user back to the index.
       // Otherwise alerts the user with an error.
       .post((req, res) => {
-        if (articleDatabase.add(req.body)) {
-          const articles = { 'articles': articleDatabase.all() };
-          res.render('articles/index', articles);
-        } else {
-          const error = { 'error': 'Error: Invalid form information!'};
-          res.render('articles/new', error);
-        }
+        articleDatabase.add(req.body)
+        .then( (data) => {
+          res.redirect('/articles');
+        })
+        .catch( (err) => {
+          console.log('POST /ARTICLES ERROR ' + err);
+        });
       });
 
 // Brings the user to a form which will submit a POST for a new item
@@ -46,6 +46,9 @@ router.route('/:title')
       } else {
         throw new Error('err');
       }
+    })
+    .catch( (err) => {
+      console.log('GET /ARTICLES/:title ERROR ' + err);
     });
   })
   .put((req, res) => {
