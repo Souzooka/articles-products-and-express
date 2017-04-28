@@ -26,3 +26,6 @@ GET /products/2 Fri, 28 Apr 2017 20:22:09 GMT
 GET /products/2/edit Fri, 28 Apr 2017 20:22:11 GMT
 POST /products/2?_method=DELETE Fri, 28 Apr 2017 20:22:12 GMT
 GET /products Fri, 28 Apr 2017 20:22:12 GMT
+GET / Fri, 28 Apr 2017 20:26:24 GMT
+GET /articles Fri, 28 Apr 2017 20:26:26 GMT
+GET /articles/ Fri, 28 Apr 2017 20:26:28 GMT

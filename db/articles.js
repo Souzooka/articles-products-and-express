@@ -1,9 +1,14 @@
 /* jshint esversion:6 */
 module.exports = (function(){
 
-  // Holds an array of article objects.
-  // no touch
-  let _articles = [];
+  // import pg-promise
+  const pgp = require('pg-promise')();
+  const db = pgp({
+    host: 'localhost',
+    port: 5432,
+    database: 'articles_and_products',
+    user: 'souzooka'
+  });
 
   /** function _all()
     * Parameters:
@@ -14,7 +19,13 @@ module.exports = (function(){
     *   Getter function. Returns articles.
     */
   function _all() {
-    return _articles;
+    return db.any('SELECT * FROM $1~;', ['articles'])
+    .then( (data) => {
+      return data;
+    })
+    .catch( (error) => {
+      console.log('all() ' + error);
+    });
   }
 
   /** function _validateNewArticle(article)

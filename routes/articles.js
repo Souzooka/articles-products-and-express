@@ -6,8 +6,14 @@ const articleDatabase = require('../db/articles.js');
 router.route('/')
       // Retrieves the index page
       .get((req, res) => {
-        const articles = { 'articles': articleDatabase.all() };
-        res.render('articles/index', articles);
+        articleDatabase.all()
+        .then( (data) => {
+          const articles = { 'articles': data };
+          res.render('articles/index', articles);
+        })
+        .catch( (err) => {
+          console.log('GET /ARTICLES ERROR ' + err);
+        });
       })
       // Creates a new product if successful, and brings user back to the index.
       // Otherwise alerts the user with an error.
