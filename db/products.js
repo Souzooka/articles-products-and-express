@@ -130,40 +130,19 @@ module.exports = (function(){
     *   Uses _indexOfArticle() to find the index of an object in _articles.
     *   This object is spliced out with newArticle, if newArticle passes validation.
     */
-  function _editProduct(newProductProps) {
-
-    if (!newProductProps.id) {
+  function _editProduct(product) {
+    product.price = Number(product.price);
+    product.inventory = Number(product.inventory);
+    product.id = Number(product.id);
+    return db.any(`UPDATE products
+                   SET price = ${product.price}, inventory = ${product.inventory}, name = '${product.name}'
+                   WHERE products.id = ${product.id};`, [true])
+    .then( (data) => {
+      return true;
+    })
+    .catch(function(error) {
       return false;
-    }
-    newProductProps.id = Number(newProductProps.id);
-
-    const index = _indexOfProduct(newProductProps.id);
-
-    if (index === -1) {
-      // Product not found
-      return false;
-    } else {
-      const product = _products.splice(index, 1)[0];
-      const id = product.id;
-
-      // Maintain a copy of the found object in case new properties are invalid
-      const productCopy = {};
-      Object.assign(productCopy, product);
-
-      // Copy new values over to product
-      Object.assign(product, newProductProps);
-
-      // if the new product is valid, splice it back in.
-      // Otherwise splice our copy back in.
-      if (_validateNewProduct(product)) {
-        product.id = id;
-        _products.splice(index, 0, product);
-        return true;
-      } else {
-        _products.splice(index, 0, productCopy);
-        return false;
-      }
-    }
+    });
   }
 
   /** function _deleteById(id)

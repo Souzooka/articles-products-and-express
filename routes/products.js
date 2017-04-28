@@ -53,14 +53,20 @@ router.route('/:id')
   })
   .put((req, res) => {
     req.body.id = req.params.id;
-    if (productDatabase.editProduct(req.body)) {
-      const product = productDatabase.getById(req.params.id);
-      res.render('products/product', product);
-    } else {
-      const error = { 'error': 'Error: Invalid form information!' };
+    productDatabase.editProduct(req.body)
+    .then( (data) => {
+      if (data) {
+        res.redirect(`/products/${req.params.id}`);
+      } else {
+        throw new Error(data);
+      }
+    })
+    .catch( (err) => {
+      const error = { 'error': 'Error: Invalid form information.' };
       Object.assign(error, req.body);
       res.render('products/edit', error);
-    }
+      console.log('PUT products/:id error' + err);
+    });
   })
   .delete((req, res) => {
     productDatabase.deleteById(req.params.id)
