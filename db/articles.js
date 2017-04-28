@@ -43,7 +43,7 @@ module.exports = (function(){
     *   ├─author: 255 bytes (255)
     *   └─body:   50 KB     (51200)
     */
-  function _validateNewArticle(article) {
+/*  function _validateNewArticle(article) {
     const TITLEMAXLENGTH    =   255;
     const AUTHORMAXLENGTH   =   255;
     const BODYMAXLENGTH     =   51200;
@@ -68,25 +68,7 @@ module.exports = (function(){
     } else {
       return false;
     }
-  }
-
-  /** function _indexOfArticle(title)
-    * Parameters:
-    *   An article title.
-    * Return values:
-    *   Number representing the position of an article inside of the _articles array.
-    *     OR
-    *   -1 if the article is not found.
-    * Behavior:
-    *   Creates an array of each article's title properties, then calls indexOf(title) on this array.
-    *   Returns this result.
-    */
-  function _indexOfArticle(title) {
-    return _articles.map((article) => {
-                  return article.title;
-                })
-                .indexOf(title);
-  }
+  }*/
 
   /** function _add(article)
     * Parameters:
@@ -126,14 +108,14 @@ module.exports = (function(){
     *   Uses _indexOfArticle() to find an article object in the _articles array and return it.
     */
   function _getByTitle(urlTitle) {
-    title = decodeURIComponent(urlTitle);
-    const index = _indexOfArticle(title);
-
-    if (index !== -1) {
-      return _articles[index];
-    } else {
+    const title = decodeURIComponent(urlTitle);
+    return db.any(`SELECT * FROM $1~ WHERE title = $2;`, ['articles', title])
+    .then( (data) => {
+      return data;
+    })
+    .catch( (error) => {
       return false;
-    }
+    });
   }
 
   /** function _editArticle(newArticleProps)

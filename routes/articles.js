@@ -8,6 +8,9 @@ router.route('/')
       .get((req, res) => {
         articleDatabase.all()
         .then( (data) => {
+          data.forEach((v, i) => {
+            data[i].urlTitle = encodeURIComponent(data[i].title);
+          });
           const articles = { 'articles': data };
           res.render('articles/index', articles);
         })
@@ -34,35 +37,38 @@ router.route('/new')
       });
 
 router.route('/:title')
-      .get((req, res) => {
-        const article = articleDatabase.getByTitle(req.params.title);
-        if (article) {
-          res.render('articles/article', article);
-        } else {
-          res.sendStatus(404);
-        }
-      })
-      .put((req, res) => {
-        req.body.title = req.params.title;
-        if (articleDatabase.editArticle(req.body)) {
-          const article = articleDatabase.getByTitle(req.params.title);
-          res.render('articles/article', article);
-        } else {
-          const error = { 'error': 'Error: Invalid form information!' };
-          Object.assign(error, req.body);
-          res.render('articles/edit', error);
-        }
-      })
-      .delete((req, res) => {
-        if (articleDatabase.deleteByTitle(req.params.title)) {
-          const articles = { 'articles': articleDatabase.all() };
-          res.render('articles/index', articles);
-        } else {
-          const error = { 'error': 'Error: Somehow hell froze over and deleting this resource failed.' };
-          Object.assign(error, req.body);
-          res.render('articles/edit', error);
-        }
-      });
+  .get((req, res) => {
+    articleDatabase.getByTitle(req.params.title)
+    .then( (data) => {
+      const article = data[0];
+      if (data) {
+        res.render('articles/article', article);
+      } else {
+        throw new Error('err');
+      }
+    });
+  })
+  .put((req, res) => {
+    req.body.title = req.params.title;
+    if (articleDatabase.editArticle(req.body)) {
+      const article = articleDatabase.getByTitle(req.params.title);
+      res.render('articles/article', article);
+    } else {
+      const error = { 'error': 'Error: Invalid form information!' };
+      Object.assign(error, req.body);
+      res.render('articles/edit', error);
+    }
+  })
+  .delete((req, res) => {
+    if (articleDatabase.deleteByTitle(req.params.title)) {
+      const articles = { 'articles': articleDatabase.all() };
+      res.render('articles/index', articles);
+    } else {
+      const error = { 'error': 'Error: Somehow hell froze over and deleting this resource failed.' };
+      Object.assign(error, req.body);
+      res.render('articles/edit', error);
+    }
+  });
 
 router.route('/:title/edit')
       .get((req, res) => {
